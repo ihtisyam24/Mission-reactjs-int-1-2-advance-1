@@ -1,8 +1,8 @@
 import React from "react";
 import Navbar from "../components/organisme/Navbar";
-import Button from "../components/organisme/Button";
+import ButtonL from "../components/organisme/ButtonL";
 
-export default function Register() {
+export default function Login() {
   return (
     <>
       <Navbar />
@@ -105,7 +105,7 @@ export default function Register() {
             </form>
 
             {/* Separate Buttons */}
-            <Button />
+            <ButtonL />
           </div>
         </div>
       </div>

@@ -7,11 +7,11 @@ import Register from "../pages/Register";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />, // You can replace this with your Home or Layout component if available
+    element: <Login />, // You can replace this with your Home or Layout component if available
   },
   {
-    path: "/login",
-    element: <Login />,
+    path: "/home",
+    element: <Home />,
   },
   {
     path: "/Register",
