@@ -1,9 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/organisme/Navbar";
 import { togglePassword } from "../utils/togglePassword";
 import Button from "../components/organisme/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const navigate = useNavigate();
+
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (
+      !fullname.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      !password.trim() ||
+      !confirmPassword.trim()
+    ) {
+      setError("Semua field harus diisi.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Password dan konfirmasi password tidak cocok.");
+      return;
+    }
+
+    // Save user data to localStorage
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const userExists = users.find((user) => user.email === email);
+    if (userExists) {
+      setError("Email sudah terdaftar.");
+      return;
+    }
+
+    const newUser = { fullname, email, phone, password };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    setSuccess("Registrasi berhasil! Silakan login.");
+    // Optionally clear form
+    setFullname("");
+    setEmail("");
+    setPhone("");
+    setPassword("");
+    setConfirmPassword("");
+    // Redirect to login page after short delay
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
+  };
+
   return (
     <>
       <Navbar />
@@ -19,7 +75,7 @@ export default function Register() {
               </p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Nama Lengkap  */}
               <div>
                 <label
@@ -33,6 +89,8 @@ export default function Register() {
                   id="fullname"
                   name="fullname"
                   required
+                  value={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Masukkan nama lengkap"
                 />
@@ -51,6 +109,8 @@ export default function Register() {
                   id="email"
                   name="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Masukkan email"
                 />
@@ -64,96 +124,16 @@ export default function Register() {
                 >
                   Nomor Telepon *
                 </label>
-                <div className="flex space-x-2">
-                  <div className="relative">
-                    <button
-                      type="button"
-                      id="dropdown-phone-button"
-                      className="flex items-center justify-center px-4 py-2.5 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 rounded-l-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 640 480"
-                        className="w-6 h-4 mr-2"
-                      >
-                        <rect width="640" height="240" fill="#e30a17" />
-                        <rect width="640" height="240" y="240" fill="#ffffff" />
-                      </svg>
-                      +62
-                      <svg
-                        className="w-2.5 h-2.5 ml-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </button>
-
-                    {/* Dropdown Menu */}
-                    <div
-                      id="dropdown-phone"
-                      className="hidden absolute top-full left-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-52 mt-1"
-                    >
-                      <ul className="py-2 text-sm text-gray-700">
-                        <li>
-                          <button
-                            type="button"
-                            className="flex items-center w-full px-4 py-2 hover:bg-gray-100"
-                          >
-                            <svg className="w-4 h-4 mr-2" viewBox="0 0 640 480">
-                              <rect width="640" height="240" fill="#e30a17" />
-                              <rect
-                                width="640"
-                                height="240"
-                                y="240"
-                                fill="#ffffff"
-                              />
-                            </svg>
-                            Indonesia (+62)
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            type="button"
-                            className="flex items-center w-full px-4 py-2 hover:bg-gray-100"
-                          >
-                            <svg className="w-4 h-4 mr-2" viewBox="0 0 640 480">
-                              <rect width="640" height="160" fill="#D02F44" />
-                              <rect
-                                width="640"
-                                height="160"
-                                y="160"
-                                fill="#ffffff"
-                              />
-                              <rect
-                                width="640"
-                                height="160"
-                                y="320"
-                                fill="#D02F44"
-                              />
-                            </svg>
-                            United States (+1)
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    className="flex-1 px-3 py-2 border border-l-0 border-gray-300 rounded-r-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                    placeholder="812-3456-7890"
-                  />
-                </div>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  placeholder="812-3456-7890"
+                />
               </div>
 
               {/* Password */}
@@ -170,6 +150,8 @@ export default function Register() {
                     id="password"
                     name="password"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Masukkan kata sandi"
                   />
@@ -210,6 +192,8 @@ export default function Register() {
                     id="confirm-password"
                     name="confirm-password"
                     required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Konfirmasi kata sandi"
                   />
@@ -257,10 +241,20 @@ export default function Register() {
                   Lupa Password?
                 </a>
               </div>
-            </form>
 
-            {/* Separate Buttons */}
-            <Button />
+              {error && (
+                <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+              )}
+              {success && (
+                <p className="text-green-500 text-sm mt-2 text-center">
+                  {success}
+                </p>
+              )}
+
+              <div>
+                <Button />
+              </div>
+            </form>
           </div>
         </div>
       </div>

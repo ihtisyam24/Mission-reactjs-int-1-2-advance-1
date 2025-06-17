@@ -7,7 +7,7 @@ export default function HomeLayouts({ children }) {
   return (
     <>
       <Navbar />
-      {children}
+      <div className="bg-amber-50 pt-10">{children}</div>
       <Footer />
     </>
   );

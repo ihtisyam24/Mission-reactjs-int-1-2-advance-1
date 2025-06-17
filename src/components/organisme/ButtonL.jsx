@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/images/logo.png";
 
 export default function ButtonL() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div className="space-y-4 mt-6">
@@ -16,6 +19,7 @@ export default function ButtonL() {
         {/* <!-- Register Button --> */}
         <button
           type="button"
+          onClick={() => navigate("/Register")}
           className="w-full bg-green-100 hover:bg-green-200 text-green-600 font-medium py-2 px-4 border border-green-400 rounded-md transition duration-200"
         >
           Daftar

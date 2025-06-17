@@ -3,8 +3,8 @@ import React from "react";
 export default function Banner() {
   return (
     <>
-      <div className="py-10">
-        <div className="max-w-4l mx-auto px-4 sm:px-4 lg:px-8">
+      <div className="py-6">
+        <div className="max-w-4l mx-auto px-4 sm:px-4 lg:px-20">
           <div className="flex justify-center items-center min-h-[50vh]">
             <div className="w-full">
               {/* <!-- banner --> */}

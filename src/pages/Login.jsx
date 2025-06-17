@@ -1,11 +1,40 @@
-import React from "react";
-import Navbar from "../components/organisme/Navbar";
+import React, { useState } from "react";
 import ButtonL from "../components/organisme/ButtonL";
+import { useNavigate } from "react-router-dom";
+import NavbarL from "../components/organisme/NavbarL";
 
 export default function Login() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!email.trim() || !password.trim()) {
+      setError("Email dan password harus diisi.");
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(
+      (user) => user.email === email && user.password === password
+    );
+
+    if (user) {
+      // Successful login, navigate to home
+      navigate("/home");
+    } else {
+      setError("Email atau password salah.");
+    }
+  };
+
   return (
     <>
-      <Navbar />
+      <NavbarL />
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-amber-50">
         <div className="max-w-md w-full space-y-8">
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -18,7 +47,7 @@ export default function Login() {
               </p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               {/* Email */}
               <div>
                 <label
@@ -32,13 +61,12 @@ export default function Login() {
                   id="email"
                   name="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   placeholder="Masukkan email"
                 />
               </div>
-
-              {/* Phone Number */}
-              {/* Removed as per user request */}
 
               {/* Password */}
               <div>
@@ -54,6 +82,8 @@ export default function Login() {
                     id="password"
                     name="password"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Masukkan kata sandi"
                   />
@@ -90,9 +120,6 @@ export default function Login() {
                 </div>
               </div>
 
-              {/* Confirm Password */}
-              {/* Removed as per user request */}
-
               {/* Forgot Password Link */}
               <div className="text-right">
                 <a
@@ -102,10 +129,13 @@ export default function Login() {
                   Lupa Password?
                 </a>
               </div>
-            </form>
 
-            {/* Separate Buttons */}
-            <ButtonL />
+              {error && (
+                <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+              )}
+
+              <ButtonL />
+            </form>
           </div>
         </div>
       </div>
