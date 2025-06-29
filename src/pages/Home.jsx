@@ -1,64 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HomeLayouts from "../layouts/HomeLayouts";
 import Hero from "../components/molecules/Hero";
 import Collection from "../components/molecules/Collection";
 import Card from "../components/molecules/Card";
 import Banner from "../components/molecules/Banner";
+import { getCards, addCard as apiAddCard, updateCard as apiUpdateCard, deleteCard as apiDeleteCard } from "../../services/api/api";
 
 const Home = () => {
-  // Initial data array of card objects
-  const initialCards = [
-    {
-      id: 1,
-      image: "src/assets/images/g1.jpg",
-      title: "Big 4 Auditor Financial Analyst",
-      description:
-        "Mulai transformasi dengan instruktur profesional, harga yang terjangkau...",
-      authorImage: "src/assets/images/prf1.png",
-      authorName: "Jenna Ortega",
-      price: "Rp 300K",
-      position: "Senior Accountant di Gojek",
-      rating: "⭐⭐⭐⭐",
-      ratingCount: "3,5(86)",
-    },
-    {
-      id: 2,
-      image: "src/assets/images/g2.jpg",
-      title: "Big 4 Auditor Financial Analyst",
-      description:
-        "Mulai transformasi dengan instruktur profesional, harga yang terjangkau...",
-      authorImage: "src/assets/images/prf2.png",
-      authorName: "Jenna Ortega",
-      price: "Rp 300K",
-      position: "Senior Accountant di Gojek",
-      rating: "⭐⭐⭐⭐",
-      ratingCount: "3,5(86)",
-    },
-    {
-      id: 3,
-      image: "src/assets/images/g4.jpg",
-      title: "Big 4 Auditor Financial Analyst",
-      description:
-        "Mulai transformasi dengan instruktur profesional, harga yang terjangkau...",
-      authorImage: "src/assets/images/prf3.png",
-      authorName: "Jenna Ortega",
-      price: "Rp 300K",
-      position: "Senior Accountant di Gojek",
-      rating: "⭐⭐⭐⭐",
-      ratingCount: "3,5(86)",
-    },
-    // Add more initial cards as needed
-  ];
-
-  const [cards, setCards] = useState(initialCards);
+  const [cards, setCards] = useState([]);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const data = await getCards();
+        setCards(data);
+      } catch (error) {
+        console.error("Failed to fetch cards:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCards();
+  }, []);
 
   // Add a new card
-  const addCard = () => {
+  const addCard = async () => {
     if (newTitle.trim() === "" || newDescription.trim() === "") return;
     const newCard = {
-      id: Date.now(),
       image: "src/assets/images/g1.jpg", // default image
       title: newTitle,
       description: newDescription,
@@ -69,22 +40,42 @@ const Home = () => {
       rating: "⭐⭐⭐⭐",
       ratingCount: "0(0)",
     };
-    setCards([...cards, newCard]);
-    setNewTitle("");
-    setNewDescription("");
+    console.log("Adding card with payload:", newCard);
+    try {
+      const addedCard = await apiAddCard(newCard);
+      setCards([...cards, addedCard]);
+      setNewTitle("");
+      setNewDescription("");
+    } catch (error) {
+      console.error("Failed to add card:", error);
+    }
   };
 
   // Delete a card by id
-  const deleteCard = (id) => {
-    setCards(cards.filter((card) => card.id !== id));
+  const deleteCard = async (id) => {
+    try {
+      await apiDeleteCard(id);
+      setCards(cards.filter((card) => card.id !== id));
+    } catch (error) {
+      console.error("Failed to delete card:", error);
+    }
   };
 
   // Update a card by id
-  const updateCard = (id, updatedData) => {
-    setCards(
-      cards.map((card) => (card.id === id ? { ...card, ...updatedData } : card))
-    );
+  const updateCard = async (id, updatedData) => {
+    try {
+      const updatedCard = await apiUpdateCard(id, updatedData);
+      setCards(
+        cards.map((card) => (card.id === id ? updatedCard : card))
+      );
+    } catch (error) {
+      console.error("Failed to update card:", error);
+    }
   };
+
+  if (loading) {
+    return <div>Loading cards...</div>;
+  }
 
   return (
     <>
