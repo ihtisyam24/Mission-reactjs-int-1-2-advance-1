@@ -1,4 +1,5 @@
 import React from "react";
+import blogImage from "../../assets/images/blog.jpg";
 
 export default function Hero() {
   return (
@@ -7,7 +8,10 @@ export default function Hero() {
         <div className="flex justify-center items-center min-h-[50vh]">
           <div className="w-full">
             {/* <!-- banner --> */}
-            <div className="relative p-4 bg-[url('src/assets/images/blog.jpg')] h-72 sm:h-80 md:h-96 bg-cover bg-center rounded-lg overflow-hidden">
+            <div
+              className="relative p-4 h-72 sm:h-80 md:h-96 bg-cover bg-center rounded-lg overflow-hidden"
+              style={{ backgroundImage: `url(${blogImage})` }}
+            >
               <div className="absolute inset-0 bg-black/70 flex justify-center items-center">
                 <div className="w-full md:w-2/3 lg:w-1/2 text-center space-y-3 flex flex-col justify-center items-center px-4">
                   <h1 className="text-white text-2xl sm:text-3xl font-bold">

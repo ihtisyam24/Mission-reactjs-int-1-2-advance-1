@@ -1,4 +1,5 @@
 import React from "react";
+import bn2Image from "../../assets/images/bn2.jpg";
 
 export default function Banner() {
   return (
@@ -8,7 +9,10 @@ export default function Banner() {
           <div className="flex justify-center items-center min-h-[50vh]">
             <div className="w-full">
               {/* <!-- banner --> */}
-              <div className="relative p-4 bg-[url('src/assets/images/bn2.jpg')] h-96 bg-cover bg-center rounded-lg overflow-hidden">
+              <div
+                className="relative p-4 h-96 bg-cover bg-center rounded-lg overflow-hidden"
+                style={{ backgroundImage: `url(${bn2Image})` }}
+              >
                 <div className="absolute inset-0 bg-black/70 flex justify-center items-center">
                   <div className="w-full md:w-1/2 text-center space-y-3 flex flex-col justify-center items-center px-4">
                     <h1 className="text-white text-3xl font-bold">

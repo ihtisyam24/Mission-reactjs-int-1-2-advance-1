@@ -4,10 +4,16 @@ import Hero from "../components/molecules/Hero";
 import Collection from "../components/molecules/Collection";
 import Card from "../components/molecules/Card";
 import Banner from "../components/molecules/Banner";
-import { getCards, addCard as apiAddCard, updateCard as apiUpdateCard, deleteCard as apiDeleteCard } from "../../services/api/api";
+import {
+  getCards,
+  addCard as apiAddCard,
+  updateCard as apiUpdateCard,
+  deleteCard as apiDeleteCard,
+} from "../../services/api/api";
+import products from "../data/products";
 
 const Home = () => {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState(products);
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [loading, setLoading] = useState(true);
@@ -30,10 +36,11 @@ const Home = () => {
   const addCard = async () => {
     if (newTitle.trim() === "" || newDescription.trim() === "") return;
     const newCard = {
-      image: "src/assets/images/g1.jpg", // default image
+      id: Date.now(),
+      image: "g1.jpg", // default image filename
       title: newTitle,
       description: newDescription,
-      authorImage: "src/assets/images/prf1.png",
+      authorImage: "prf1.png",
       authorName: "New Author",
       price: "Rp 0",
       position: "New Position",
@@ -65,9 +72,7 @@ const Home = () => {
   const updateCard = async (id, updatedData) => {
     try {
       const updatedCard = await apiUpdateCard(id, updatedData);
-      setCards(
-        cards.map((card) => (card.id === id ? updatedCard : card))
-      );
+      setCards(cards.map((card) => (card.id === id ? updatedCard : card)));
     } catch (error) {
       console.error("Failed to update card:", error);
     }
