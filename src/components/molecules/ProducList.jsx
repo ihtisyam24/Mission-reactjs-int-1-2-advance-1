@@ -299,17 +299,17 @@ export default function ProducList({ products, onUpdate, onDelete }) {
       <div className="hidden md:block">
         <aside className="w-72 bg-white rounded-lg p-6 shadow-md sticky top-24 max-h-[calc(100vh-96px)] overflow-y-auto scrollbar-thin">
           <header className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold">Filter</h2>
+            <h2 className="text-green-600 font-semibold">Filter</h2>
             <button
               onClick={resetFilters}
-              className="text-indigo-600 hover:text-indigo-800 text-sm"
+              className="text-green-600 hover:text-green-800 text-sm"
             >
               Reset
             </button>
           </header>
           {/* Categories */}
           <section className="mb-6">
-            <h3 className="font-semibold mb-2">Bidang Studi</h3>
+            <h3 className="text-green-600 font-semibold mb-2">Bidang Studi</h3>
             {categories.map((category) => (
               <label
                 key={category}
@@ -319,7 +319,7 @@ export default function ProducList({ products, onUpdate, onDelete }) {
                   type="checkbox"
                   checked={filters.categories.includes(category)}
                   onChange={() => toggleCategory(category)}
-                  className="form-checkbox h-4 w-4 text-indigo-600"
+                  className="form-checkbox h-4 w-4 text-green-600"
                 />
                 <span>{category}</span>
               </label>
@@ -327,7 +327,7 @@ export default function ProducList({ products, onUpdate, onDelete }) {
           </section>
           {/* Price */}
           <section className="mb-6">
-            <h3 className="font-semibold mb-2">Harga</h3>
+            <h3 className="text-green-600 font-semibold mb-2">Harga</h3>
             {priceRanges.map((price) => (
               <label
                 key={price.value}
@@ -337,7 +337,7 @@ export default function ProducList({ products, onUpdate, onDelete }) {
                   type="checkbox"
                   checked={filters.priceRange === price.value}
                   onChange={() => setPriceFilter(price.value)}
-                  className="form-checkbox h-4 w-4 text-indigo-600"
+                  className="form-checkbox h-4 w-4 text-green-600"
                 />
                 <span>{price.label}</span>
               </label>
@@ -345,7 +345,7 @@ export default function ProducList({ products, onUpdate, onDelete }) {
           </section>
           {/* Duration */}
           <section>
-            <h3 className="font-semibold mb-2">Durasi</h3>
+            <h3 className="text-green-600 font-semibold mb-2">Durasi</h3>
             {durations.map((duration) => (
               <label
                 key={duration.value}
@@ -355,7 +355,7 @@ export default function ProducList({ products, onUpdate, onDelete }) {
                   type="checkbox"
                   checked={filters.duration === duration.value}
                   onChange={() => setDurationFilter(duration.value)}
-                  className="form-checkbox h-4 w-4 text-indigo-600"
+                  className="form-checkbox h-4 w-4 text-green-600"
                 />
                 <span>{duration.label}</span>
               </label>
@@ -391,57 +391,67 @@ export default function ProducList({ products, onUpdate, onDelete }) {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {paginatedProducts.map((product) => (
             <div
               key={product.id}
-              className="bg-white rounded-lg shadow p-4 flex space-x-4"
+              className="bg-white rounded-lg shadow-md p-4 flex flex-col"
             >
               <img
                 src={product.image}
                 alt={product.title}
-                className="w-24 h-24 object-cover rounded"
+                className="w-full h-40 object-cover rounded-lg mb-4"
               />
-              <div className="flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold mb-1">
-                    {product.title}
-                  </h3>
-                  <p className="text-gray-600 mb-1">{product.description}</p>
-                  <div className="flex items-center space-x-2 mb-1">
+              <div className="flex flex-col flex-grow">
+                <h3 className="text-md font-bold mb-1">{product.title}</h3>
+                <p className="text-gray-600 text-sm mb-2 line-clamp-2">
+                  {product.description}
+                </p>
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="relative">
                     <img
                       src={product.profileImage}
                       alt={product.profileName}
-                      className="w-6 h-6 rounded-full"
+                      className="w-8 h-8 rounded-full relative z-10"
                     />
-                    <div>
-                      <p className="text-sm font-medium">
-                        {product.profileName}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {product.profilePosition}
-                      </p>
-                    </div>
+                    <span className="absolute inset-0 rounded-full bg-yellow-200 opacity-50 -z-10"></span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold">
+                      {product.profileName}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {product.profilePosition}
+                    </p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  {product.priceDiscount ? (
-                    <>
-                      <p className="text-gray-500 line-through">
+                <div className="flex items-center justify-between mt-auto">
+                  <div className="flex items-center space-x-1">
+                    <div className="text-yellow-400 text-sm">
+                      {"⭐".repeat(Math.round(product.rating))}
+                    </div>
+                    <span className="text-gray-500 text-xs underline">
+                      {typeof product.rating === "number"
+                        ? product.rating.toFixed(1)
+                        : product.rating}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    {product.priceDiscount ? (
+                      <>
+                        <p className="text-red-500 line-through text-xs">
+                          Rp {product.price.toLocaleString()}
+                        </p>
+                        <p className="text-green-600 font-semibold text-sm">
+                          Rp {product.priceDiscount.toLocaleString()}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-green-600 font-semibold text-sm">
                         Rp {product.price.toLocaleString()}
                       </p>
-                      <p className="text-green-600 font-semibold">
-                        Rp {product.priceDiscount.toLocaleString()}
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-green-600 font-semibold">
-                      Rp {product.price.toLocaleString()}
-                    </p>
-                  )}
-                  <p className="text-yellow-500">
-                    {"⭐".repeat(Math.round(product.rating))}
-                  </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
